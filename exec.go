@@ -39,7 +39,7 @@ func ready() error {
 	)
 
 	if *verbose {
-		fmt.Printf("setenv PATH=%s\n", binPath)
+		fmt.Printf("export PATH=%s\n", binPath)
 	}
 	err = os.Setenv("PATH", binPath)
 	if err != nil {
@@ -51,7 +51,7 @@ func ready() error {
 		string(filepath.ListSeparator),
 	)
 	if *verbose {
-		fmt.Printf("setenv GOPATH=%s\n", gopath)
+		fmt.Printf("export GOPATH=%s\n", gopath)
 	}
 	err = os.Setenv("GOPATH", gopath)
 	if err != nil {
