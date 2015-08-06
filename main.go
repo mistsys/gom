@@ -24,6 +24,11 @@ func usage() {
                               recursively, and generate Gomfile
    gom lock                : Generate Gomfile.lock
    gom populate            : Populate _vendor package source
+
+ Options:
+   -v                      : enable verbosity
+   -f FILE                 : use FILE as Gomfile
+   -groups GROUPS          : comma-separaated list of Gomfile groups
 `, os.Args[0])
 	os.Exit(1)
 }
