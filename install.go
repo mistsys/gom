@@ -162,7 +162,28 @@ func (gom *Gom) Clone(args []string) error {
 	// Or we could simulate what 'go get' does (since really the hardcoded 'master/HEAD' in  go get is the root
 	// of this. However looking at the output of 'go help importpath' shows that 'go get' does a lot of stuff
 	// underneath, and that is stuff I don't want to have to redo.
-	// 'go get' is open source. Perhaps I can use its pieces and write my own?
+	// 'go get' is open source. Perhaps I can use its pieces and write my own? The code is all in GOROOT/src/cmd/go/get.go
+	// and in 'package main', rather than a library. It's BSD licensed, but it's a lot of code to understand and I'd
+	// rather not go further down that path right now.
+	// So my next best idea is to redo the 'go get -d' after doing each 'git checkout'. That requires mapping between
+	// go packages and git repos, but beyond that it should be doable, though of course rather slow (but so is doing a
+	// whole 'go get/git clone' in the first place when just one version is needed.
+
+	// Hey, that gives me a way better idea. I should git clone all the github repos with a fixed commit, then do
+	// the 'go get -d' to fetch the missing pieces. That would let me do a quick shallow clone, or even use the
+	// auto-generated tarballs from github. That would also allow keeping a cache (dl/) of tarballs locally,
+	// which is also something I think gom should permit.
+
+	// Other things to fix:
+	//  1) if this package uses other packages in the same repo, those aren't getting vendored. But 'go get' is fetching
+	//     the master/HEAD into _vendor/. That leads to nasty collisions, and to leakage.
+	//     It seems the fix is to 'cp -r' this repo (not package but repo) into _vendor/ before doing any 'go get', and
+	//     when building or running tests use that copy of the packages.
+	//     If the outer GOPATH was entirely omitted (so GOPATH was just _vendor/) then we'd notice any missing
+	//     dependencies which weren't in the Gomfile.
+
+	// Lastly there is the question of why 'gom install' is different from the other commands in exec.go.
+	// I would think all of them need to prepare the _vendor/ in the same way.
 
 	fmt.Printf("downloading %s\n", gom.name)
 	return run(cmdArgs, Blue)
