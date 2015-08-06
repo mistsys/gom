@@ -52,19 +52,27 @@ func ready() error {
 		dir = next
 	}
 
-	binPath := os.Getenv("PATH") +
-		string(filepath.ListSeparator) +
-		filepath.Join(vendor, "bin")
+	binPath := strings.Join(
+		[]string{filepath.Join(vendor, "bin"), os.Getenv("PATH")},
+		string(filepath.ListSeparator),
+	)
+
+	if *verbose {
+		fmt.Printf("setenv PATH=%s\n", binPath)
+	}
 	err = os.Setenv("PATH", binPath)
 	if err != nil {
 		return err
 	}
 
-	vendor = strings.Join(
+	gopath := strings.Join(
 		[]string{vendor, dir, os.Getenv("GOPATH")},
 		string(filepath.ListSeparator),
 	)
-	err = os.Setenv("GOPATH", vendor)
+	if *verbose {
+		fmt.Printf("setenv GOPATH=%s\n", gopath)
+	}
+	err = os.Setenv("GOPATH", gopath)
 	if err != nil {
 		return err
 	}
