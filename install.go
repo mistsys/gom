@@ -91,12 +91,13 @@ func vcsExec(dir string, args ...string) error {
 }
 
 func has(c interface{}, key string) bool {
-	if m, ok := c.(map[string]interface{}); ok {
-		_, ok := m[key]
+	switch c := c.(type) {
+	case map[string]interface{}:
+		_, ok := c[key]
 		return ok
-	} else if a, ok := c.([]string); ok {
-		for _, s := range a {
-			if ok && s == key {
+	case []string:
+		for _, s := range c {
+			if s == key {
 				return true
 			}
 		}

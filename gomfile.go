@@ -30,35 +30,35 @@ func unquote(name string) string {
 
 func matchOS(any interface{}) bool {
 	var envs []string
-	if as, ok := any.([]string); ok {
-		envs = as
-	} else if s, ok := any.(string); ok {
-		envs = []string{s}
-	} else {
+	switch a := any.(type) {
+	case []string:
+		envs = a
+	case string:
+		envs = []string{a}
+	default:
 		return false
 	}
 
-	if has(envs, runtime.GOOS) {
-		return true
-	}
-	return false
+	return has(envs, runtime.GOOS)
 }
+
 func matchEnv(any interface{}) bool {
 	var envs []string
-	if as, ok := any.([]string); ok {
-		envs = as
-	} else if s, ok := any.(string); ok {
-		envs = []string{s}
-	} else {
+	switch a := any.(type) {
+	case []string:
+		envs = a
+	case string:
+		envs = []string{a}
+	default:
 		return false
 	}
 
 	switch {
-	case has(envs, "production") && *productionEnv:
+	case *productionEnv && has(envs, "production"):
 		return true
-	case has(envs, "development") && *developmentEnv:
+	case *developmentEnv && has(envs, "development"):
 		return true
-	case has(envs, "test") && *testEnv:
+	case *testEnv && has(envs, "test"):
 		return true
 	}
 
