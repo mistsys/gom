@@ -66,14 +66,14 @@ var stderr = os.Stderr
 var stdin = os.Stdin
 
 func run(args []string, c Color) error {
-	if *verbose {
-		fmt.Printf("%q\n", args)
-	}
 	if err := ready(); err != nil {
 		return err
 	}
 	if len(args) == 0 {
 		usage()
+	}
+	if *verbose {
+		fmt.Printf("%q\n", args)
 	}
 	cmd := exec.Command(args[0], args[1:]...)
 	cmd.Stdout = stdout
