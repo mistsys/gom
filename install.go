@@ -243,7 +243,7 @@ func isDir(p string) bool {
 }
 
 func populate(args []string) ([]Gom, error) {
-	allGoms, err := parseGomfile("Gomfile")
+	allGoms, err := parseGomfile(*gomFileName)
 	if err != nil {
 		return nil, err
 	}

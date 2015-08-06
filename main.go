@@ -33,6 +33,7 @@ var developmentEnv = flag.Bool("development", false, "development environment")
 var testEnv = flag.Bool("test", false, "test environment")
 var verbose = flag.Bool("v", false, "enable verbosity")
 var customGroups = flag.String("groups", "", "comma-separated list of Gomfile groups")
+var gomFileName = flag.String("f", "Gomfile", "use file as Gomfile")
 var customGroupList []string
 var vendorFolder string
 

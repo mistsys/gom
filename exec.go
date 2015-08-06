@@ -38,8 +38,9 @@ func ready() error {
 		return err
 	}
 
+	gomfile := filepath.Base(*gomFileName)
 	for {
-		file := filepath.Join(dir, "Gomfile")
+		file := filepath.Join(dir, gomfile)
 		if isFile(file) {
 			vendor = filepath.Join(dir, vendorFolder)
 			break

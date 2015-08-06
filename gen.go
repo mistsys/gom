@@ -83,11 +83,11 @@ func scanDirectory(path, srcDir string) (ret []string, err error) {
 }
 
 func genGomfile() error {
-	_, err := os.Stat("Gomfile")
+	_, err := os.Stat(*gomFileName)
 	if err == nil {
-		return errors.New("Gomfile already exists")
+		return errors.New(*gomFileName + " already exists")
 	}
-	f, err := os.Create("Gomfile")
+	f, err := os.Create(*gomFileName)
 	if err != nil {
 		return err
 	}
@@ -109,7 +109,7 @@ func genGomfile() error {
 }
 
 func genGomfileLock() error {
-	allGoms, err := parseGomfile("Gomfile")
+	allGoms, err := parseGomfile(*gomFileName)
 	if err != nil {
 		return err
 	}
@@ -150,7 +150,7 @@ func genGomfileLock() error {
 
 		}
 	}
-	f, err := os.Create("Gomfile.lock")
+	f, err := os.Create(*gomFileName + ".lock")
 	if err != nil {
 		return err
 	}
@@ -162,6 +162,6 @@ func genGomfileLock() error {
 			fmt.Fprintf(f, "gom '%s'\n", gom.name)
 		}
 	}
-	fmt.Println("Gomfile.lock is generated")
+	fmt.Println(*gomFileName + ".lock is generated")
 	return nil
 }
