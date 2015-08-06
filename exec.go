@@ -28,28 +28,9 @@ func handleSignal() {
 }
 
 func ready() error {
-	dir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
 	vendor, err := filepath.Abs(vendorFolder)
 	if err != nil {
 		return err
-	}
-
-	gomfile := filepath.Base(*gomFileName)
-	for {
-		file := filepath.Join(dir, gomfile)
-		if isFile(file) {
-			vendor = filepath.Join(dir, vendorFolder)
-			break
-		}
-		next := filepath.Clean(filepath.Join(dir, ".."))
-		if next == dir {
-			break
-		}
-		dir = next
 	}
 
 	binPath := strings.Join(
@@ -66,7 +47,7 @@ func ready() error {
 	}
 
 	gopath := strings.Join(
-		[]string{vendor, dir, os.Getenv("GOPATH")},
+		[]string{vendor, os.Getenv("GOPATH")},
 		string(filepath.ListSeparator),
 	)
 	if *verbose {
