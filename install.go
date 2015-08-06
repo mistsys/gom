@@ -150,6 +150,20 @@ func (gom *Gom) Clone(args []string) error {
 	cmdArgs = append(cmdArgs, args...)
 	cmdArgs = append(cmdArgs, gom.name)
 
+	// NOTE: there is a problem here. 'go get -d' is going to of course fetch the head of the master branch.
+	// That is fine. And it will fetch any dependencies of the master branch (other repos). So far so good.
+	// Later we will 'git checkout' the proper commit of each of these repos.
+	// However if the commit of the repo which we 'git checkout' has a new (or old, really) dependency
+	// then nothing has fetched it. We'll pull it from the non-vendored GOPATH if it is there, and otherwise
+	// the build will break.
+	// Fixing this is quite a mess. We really should do the 'git checkout' as part of 'go get', after it fetches
+	// the repo and before it fetches the dependencies. But that would require 'go get' to take the commit as
+	// an argument to pass to the inner 'git clone'.
+	// Or we could simulate what 'go get' does (since really the hardcoded 'master/HEAD' in  go get is the root
+	// of this. However looking at the output of 'go help importpath' shows that 'go get' does a lot of stuff
+	// underneath, and that is stuff I don't want to have to redo.
+	// 'go get' is open source. Perhaps I can use its pieces and write my own?
+
 	fmt.Printf("downloading %s\n", gom.name)
 	return run(cmdArgs, Blue)
 }
