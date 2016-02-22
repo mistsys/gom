@@ -274,6 +274,7 @@ func (gom *Gom) Checkout() error {
 		}
 		if vcs != nil {
 			p = filepath.Join(vendor, "src", target)
+			fmt.Printf("Checking out ref %s for %s\n", commit_or_branch_or_tag, target)
 			return vcs.Sync(p, commit_or_branch_or_tag)
 		}
 	}
